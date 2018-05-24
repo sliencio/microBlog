@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8"/>
+    <title>editor</title>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- editor.md -->
+    <link rel="stylesheet" href="/css/style.css"/>
+    <link rel="stylesheet" href="/css/editormd.css"/>
+
+    <style type="text/css" media="screen">
+    .container {
+        width: 92%;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        /*background: #d377d4;*/
+    }
+
+    /*发布按钮*/
+    #public {
+        background: #4682B4;
+        width: 150px;
+        height: 65px;
+        margin-left: 30px;
+        margin-top: 40px;
+        font-size: 20px;
+    }
+
+    /*选择分类*/
+    #newTypeInput {
+        float: left;
+        width: 30%;
+        margin-left: 20px;
+    }
+
+    #choseTypeTitle {
+        float: left;
+        margin-top: 5px;
+        margin-left: 50px;
+        display: block;
+        color: #00BFFF;
+    }
+
+    #bottom {
+        width: 92%;
+        height: 200px;
+        padding-bottom: 50px;
+    }
+
+    #choseType {
+        float: left;
+        width: 60%;
+        line-height: 50px;
+        height: 100%;
+        overflow: auto;
+    }
+
+    #publicDiv {
+        float: left;
+        width: 40%;
+        height: 100%;
+        line-height: 100px;
+    }
+
+    .typeCheckBoxDiv {
+        width: 120px;
+        float: left;
+        padding-top: 10px;
+        padding-left: 50px;
+    }
+</style>
+</head>
+<body>
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <!-- {{/*标题*/}} -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">写博客</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/home"><span class="glyphicon glyphicon-home"></span> 返回首页</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <form action="/article/publish" method="post">
+            <div class="container">
+                <input type="text" name="title" class="form-control" id="name" placeholder="请输入文章标题">
+            </div>
+
+            <div id="test-editormd"></div>
+
+            <div class="container">
+                <input id="newTypeInput" type="text" name="newType" class="form-control" placeholder="输入新分类">
+                <h3 id="choseTypeTitle">增加新分类</h3>
+            </div>
+
+
+            <div id="bottom" class="container">
+                <div id="choseType">
+                    <dl>
+                        <div class="typeCheckBoxDiv">
+                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
+                        </div>
+                        <div class="typeCheckBoxDiv">
+                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
+                        </div>
+                        <div class="typeCheckBoxDiv">
+                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
+                        </div>
+                        <div class="typeCheckBoxDiv">
+                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
+                        </div>
+                    </dl>
+                    <dl>
+                        <div class="typeCheckBoxDiv">
+                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
+                        </div>
+                        <div class="typeCheckBoxDiv">
+                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
+                        </div>
+                        <div class="typeCheckBoxDiv">
+                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
+                        </div>
+                        <div class="typeCheckBoxDiv">
+                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
+                        </div>
+                    </dl>
+                    <dl>
+                        <div class="typeCheckBoxDiv">
+                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
+                        </div>
+                        <div class="typeCheckBoxDiv">
+                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
+                        </div>
+                        <div class="typeCheckBoxDiv">
+                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
+                        </div>
+                        <div class="typeCheckBoxDiv">
+                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
+                        </div>
+                    </dl>
+
+                </div>
+
+                <div id="publicDiv">
+                    <button id="public" type="submit" class="btn btn-success">public</button>
+                </div>
+            </div>
+
+        </form>
+
+
+    </div>
+
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/editormd.min.js"></script>
+    <script type="text/javascript">
+        var testEditor;
+        $(function () {
+            testEditor = editormd("test-editormd", {
+                width: "90%",
+                height: 640,
+                theme: (localStorage.theme) ? localStorage.theme : "default",
+                previewTheme: (localStorage.previewTheme) ? localStorage.previewTheme : "default",
+                editorTheme: (localStorage.editorTheme) ? localStorage.editorTheme : "default",
+                path: '../static/editor/lib/'
+            });
+
+            $('#public').on('click', function (event) {
+                var articleContent = testEditor.getMarkdown();
+                $.post("/article/publish",{"content":articleContent},function (data) {
+                    if(data["ret"]){
+                        if(confirm("博客发布成功！")){
+                            $.get("/article/show/?_id="+data["_id"]);
+                        }
+                    }
+                })
+            });
+        });
+    </script>
+</body>
+</html>
