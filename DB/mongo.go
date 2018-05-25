@@ -32,7 +32,7 @@ func (operater *Operater) connect() error {
 		return err
 	}
 	operater.mogSession = mogsession
-	operater.database = mogsession.DB(config.MongoUrl)
+	operater.database = mogsession.DB(config.MongoDbName)
 	return nil
 }
 
@@ -71,10 +71,10 @@ func UpdateAll(collection string, oldData interface{}, upateData interface{}) er
 }
 
 //统计集合中数据的个数
-func Query(collection string, seletor map[string]string) (retData []map[string]string) {
+func Query(collection string, seletor interface{}) (retData []map[string]interface{}) {
 	collcetion := operator.database.C(collection)
 	query := collcetion.Find(seletor)
-	ps := []map[string]string{}
+	ps := []map[string]interface{}{}
 	query.All(&ps)
 	return ps
 }

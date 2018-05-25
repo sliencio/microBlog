@@ -2,16 +2,20 @@ package controllers
 
 import (
 	"fmt"
-	"gopkg.in/mgo.v2/bson"
-	"time"
-	"microBlog/DB"
 	"github.com/gin-gonic/gin"
+	"gopkg.in/mgo.v2/bson"
+	"microBlog/DB"
+	"microBlog/model"
 	"net/http"
+	"time"
 )
 
 //编辑
 func Edit(c *gin.Context) {
-	c.HTML(http.StatusOK, "edit.html", nil)
+	temp:="选项1,选项2,选项3,选项4,选项5,选项6"
+	c.HTML(http.StatusOK, "edit.html", gin.H{
+		"typeList":temp,
+	})
 	fmt.Println("this is a middleware!")
 }
 
@@ -24,19 +28,24 @@ func Show(c *gin.Context) {
 
 //发布
 func Publish(c *gin.Context) {
-	objId := bson.NewObjectIdWithTime(time.Now())
-	DB.Insert("articles", bson.M{
-		"_id":              objId,
-		"uid":              objId,
-		"title":            "test",
-		"public_time":      time.Now(),
-		"article_classify": "go",
-		"article_content":  "content",
-		"view_count":       0,
-	})
-	c.String(http.StatusOK,"ok")
-	c.JSON(http.StatusOK,gin.H{
-		"_id": objId,
-		"ret":true,
-	})
+	article := &model.Article{
+		Id:       bson.NewObjectId(),
+		Uid:      bson.NewObjectId(),
+		Title:    "hello",
+		Time:     time.Now(),
+		Classify: "go",
+		Content:  "go is fine",
+	}
+	err := DB.Insert("articles", article)
+	fmt.Println("err:", err)
+	if err == nil {
+		// c.Redirect(http.StatusMovedPermanently,"/home")
+		c.JSON(http.StatusOK, gin.H{
+			"ret": true,
+		})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"ret": false,
+		})
+	}
 }

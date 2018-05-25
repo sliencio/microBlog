@@ -9,13 +9,17 @@ import (
 func init(){
 	router:=gin.Default()
 	router.LoadHTMLGlob("views/*")
-	router.Static("/static", "/editor")
+	router.Static("/editor/css", "./static/editor/css")
+	router.Static("/editor/js", "./static/editor/js")
+	router.Static("/editor/lib", "./static/editor/lib")
+	router.Static("/editor/fonts", "./static/editor/fonts")
+	router.Static("/editor/images", "./static/editor/images")
 
 	article:=router.Group("/article")
 	{
 		article.GET("/",controllers.Home)
 		article.GET("/edit",controllers.Edit)
-		article.GET("/publish",controllers.Publish)
+		article.POST("/publish",controllers.Publish)
 		article.GET("/show",controllers.Show)
 	}
 

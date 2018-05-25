@@ -9,8 +9,8 @@
     <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!-- editor.md -->
-    <link rel="stylesheet" href="/css/style.css"/>
-    <link rel="stylesheet" href="/css/editormd.css"/>
+    <link rel="stylesheet" href="/editor/css/style.css"/>
+    <link rel="stylesheet" href="/editor/css/editormd.css"/>
 
     <style type="text/css" media="screen">
     .container {
@@ -88,7 +88,7 @@
     </nav>
 
     <div class="container-fluid">
-        <form action="/article/publish" method="post">
+        <form>
             <div class="container">
                 <input type="text" name="title" class="form-control" id="name" placeholder="请输入文章标题">
             </div>
@@ -96,60 +96,18 @@
             <div id="test-editormd"></div>
 
             <div class="container">
-                <input id="newTypeInput" type="text" name="newType" class="form-control" placeholder="输入新分类">
+                <input id="typeList" type="hidden" value="{{.typeList}}" />
+                <input id="newTypeInput" type="text" name="newType" class="form-control" placeholder="输入新分类"/>
                 <h3 id="choseTypeTitle">增加新分类</h3>
             </div>
 
 
             <div id="bottom" class="container">
                 <div id="choseType">
-                    <dl>
-                        <div class="typeCheckBoxDiv">
-                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
-                        </div>
-                        <div class="typeCheckBoxDiv">
-                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
-                        </div>
-                        <div class="typeCheckBoxDiv">
-                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
-                        </div>
-                        <div class="typeCheckBoxDiv">
-                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
-                        </div>
-                    </dl>
-                    <dl>
-                        <div class="typeCheckBoxDiv">
-                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
-                        </div>
-                        <div class="typeCheckBoxDiv">
-                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
-                        </div>
-                        <div class="typeCheckBoxDiv">
-                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
-                        </div>
-                        <div class="typeCheckBoxDiv">
-                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
-                        </div>
-                    </dl>
-                    <dl>
-                        <div class="typeCheckBoxDiv">
-                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
-                        </div>
-                        <div class="typeCheckBoxDiv">
-                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
-                        </div>
-                        <div class="typeCheckBoxDiv">
-                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
-                        </div>
-                        <div class="typeCheckBoxDiv">
-                            <input type="radio" class="typeCheckBox" value="option2" name="aaa"> 选项 2</input>
-                        </div>
-                    </dl>
-
                 </div>
-
                 <div id="publicDiv">
-                    <button id="public" type="submit" class="btn btn-success">public</button>
+                    <button id="public" type="button" class="btn btn-success">public</button>
+                    <button id="getType" type="button" class="btn btn-success">getType</button>
                 </div>
             </div>
 
@@ -159,9 +117,35 @@
     </div>
 
 
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/editormd.min.js"></script>
+    <script src="/editor/js/jquery.min.js"></script>
+    <script src="/editor/js/editormd.min.js"></script>
     <script type="text/javascript">
+        //初始化分类列表
+        var typeList = $('#typeList').val().split(",")
+        var idIndex = 0;
+        for(var i = 0;i<typeList.length;i++){
+            console.log(i)
+            //另起一列
+            if(i%5==0){
+                idIndex++;
+                createDiv();
+            }
+            var innerLi = "<div class=\"typeCheckBoxDiv\"><input type=\"radio\" class=\"typeCheckBox\" name=\"aaa\"><span>" + typeList[i] + "</span></div>";
+            $('#dl'+idIndex).append(innerLi);
+        }
+
+        function createDiv(){
+            var currentId = "dl"+idIndex;
+            var currentDiv = "<dl id="+currentId+"></dl>"
+            $('#choseType').append(currentDiv)
+        }
+
+        $("#getType").click(function() {
+            str = $("input:radio[name='aaa']:checked").next().text();
+            alert(str);
+        });
+
+
         var testEditor;
         $(function () {
             testEditor = editormd("test-editormd", {
@@ -170,15 +154,15 @@
                 theme: (localStorage.theme) ? localStorage.theme : "default",
                 previewTheme: (localStorage.previewTheme) ? localStorage.previewTheme : "default",
                 editorTheme: (localStorage.editorTheme) ? localStorage.editorTheme : "default",
-                path: '../static/editor/lib/'
+                path: '/editor/lib/'
             });
 
             $('#public').on('click', function (event) {
                 var articleContent = testEditor.getMarkdown();
-                $.post("/article/publish",{"content":articleContent},function (data) {
+                $.post("/article/publish",{"content":articleContent},function(data){
                     if(data["ret"]){
-                        if(confirm("博客发布成功！")){
-                            $.get("/article/show/?_id="+data["_id"]);
+                        if(confirm("发布成功")){
+                            window.location.href = "/home";
                         }
                     }
                 })

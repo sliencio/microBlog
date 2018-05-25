@@ -33,6 +33,8 @@
 
     .article{
     	height: 200px;
+        background: #d9d9d9;
+        margin-top: 20px;
     }
     .article_title{
     	padding-left: 30px;
@@ -94,64 +96,68 @@
             </div>
         </nav>
 
+
+
         <!-- 文章列表 -->
         <div class="container-fluid" id="articleList">
+            {{range .articleList}}
             <div class="article">
                 <div class="articleHead">
                 	<div >
-                    	<a class="glyphicon glyphicon-certificate"></a>
-                    	<a class="article_title">标题</a>
+                     <a class="glyphicon glyphicon-certificate"></a>
+                     <a class="article_title">{{.title}}</a>
+                     <span class="article_right">
+                      <a class="article_detail">{{.time}}</a>
+                      <a class="article_detail">阅读数：{{.viewed}}</a>
+                      <a class="article_detail">评论数：{{.commented}}</a>
+                  </span>
 
-                    	<span class="article_right">
-                    		<a class="article_detail">2017-06-06 17:50:55</a>
-                    		<a class="article_detail">阅读数：549</a>
-                    		<a class="article_detail">评论数：3</a>
-                    	</span>
-                    	
-                    </div>
-                </div>
-                <div class="articleBody">
-                    <p>LitJson 删除单条数据操 说明：LitJson第三方库不提供删除单条数据的操作，只能手动实现 步骤： A：定义一个字符串tempStr保存jsonData转化成的字符串 B：清除原来JsonData数据 C：tempStr转化为JsonData,在对原来的JsonData进...</p>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- 分类列表 -->
-        <div class="container-fluid" id="classify">
-            <div class="panel-group" id="accordion">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                        	<a>
-                        		文章分类
-                        	</a>
-                    </h4>
-                </div>
-            </div>
-
-
-            <!-- 折叠分类部分 -->
-            <div class="panel panel-success">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-target="#test1">
-                        C++
-                    </a>
-                </h4>
-            </div>
-            <div id="test1" class="panel-collapse collapse">
-                <div class="collapse in">
-                    <dl>
-                    	<dt class="list-group-item"><a href="#">不太鸣禽</a></dt>
-                    	<dt class="list-group-item"><a href="#">不太鸣禽</a></dt>
-                    	<dt class="list-group-item"><a href="#">不太鸣禽</a></dt>
-                    	<dt class="list-group-item"><a href="#">不太鸣禽</a></dt>
-                    </dl>
-                </div>
-            </div>
+              </div>
+          </div>
+          <div class="articleBody">
+            <p>{{.content}}</p>
         </div>
     </div>
+    {{end}}
+</div>
+
+
+
+<!-- 分类列表 -->
+<div class="container-fluid" id="classify">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                 <a>
+                  文章分类
+              </a>
+          </h4>
+      </div>
+  </div>
+
+
+  <!-- 折叠分类部分 -->
+  <div class="panel panel-success">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-target="#test1">
+                C++
+            </a>
+        </h4>
+    </div>
+    <div id="test1" class="panel-collapse collapse">
+        <div class="collapse in">
+            <dl>
+               <dt class="list-group-item"><a href="#">不太鸣禽</a></dt>
+               <dt class="list-group-item"><a href="#">不太鸣禽</a></dt>
+               <dt class="list-group-item"><a href="#">不太鸣禽</a></dt>
+               <dt class="list-group-item"><a href="#">不太鸣禽</a></dt>
+           </dl>
+       </div>
+   </div>
+</div>
+</div>
 </body>
 </html>
 
