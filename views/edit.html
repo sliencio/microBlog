@@ -90,7 +90,7 @@
     <div class="container-fluid">
         <form>
             <div class="container">
-                <input type="text" name="title" class="form-control" id="name" placeholder="请输入文章标题">
+                <input type="text" name="title" class="form-control" id="blogTitle" placeholder="请输入文章标题">
             </div>
 
             <div id="test-editormd"></div>
@@ -123,6 +123,7 @@
         //初始化分类列表
         var typeList = $('#typeList').val().split(",")
         var idIndex = 0;
+        var finalType;
         for(var i = 0;i<typeList.length;i++){
             console.log(i)
             //另起一列
@@ -158,8 +159,27 @@
             });
 
             $('#public').on('click', function (event) {
+                inputNewType = $("#newTypeInput").val()
+                tempType = $("input:radio[name='aaa']:checked").next().text();
+                if(tempType.length == 0){
+                    finalType = inputNewType;
+                }else{
+                    finalType = tempType;
+                }
+
+                var blogTitle = $('#blogTitle').val();
+                if(blogTitle.length == 0){
+                    alert("请输入文章标题");
+                    return;
+                }
+
+                if(finalType.length == 0){
+                    alert("请输入分类");
+                    return;
+                }
+
                 var articleContent = testEditor.getMarkdown();
-                $.post("/article/publish",{"content":articleContent},function(data){
+                $.post("/article/publish",{"content":articleContent,"title":blogTitle,"classify":finalType},function(data){
                     if(data["ret"]){
                         if(confirm("发布成功")){
                             window.location.href = "/home";
