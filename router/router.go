@@ -24,9 +24,15 @@ func init(){
 	}
 
 	//用户操作
+	user:=router.Group("/user")
+	{
+		user.POST("/login",controllers.Login)
+		user.GET("/toLogin",controllers.ToLogin)
+		user.POST("/register",controllers.Register)
+		user.GET("/toRegister",controllers.ToRegister)
+	}
+	router.GET("/",controllers.Home)
 	router.GET("/home",controllers.Home)
-	router.POST("/login",controllers.Login)
-	router.GET("/toLogin",controllers.ToLogin)
-	router.GET("/register",controllers.Register)
+
 	router.Run(config.AppPort)
 }

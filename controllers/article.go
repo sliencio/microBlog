@@ -12,6 +12,7 @@ import (
 
 //编辑
 func Edit(c *gin.Context) {
+	CheckLogin(c)
 	temp:="选项1,选项2,选项3,选项4,选项5,选项6"
 	c.HTML(http.StatusOK, "edit.html", gin.H{
 		"typeList":temp,
@@ -21,6 +22,7 @@ func Edit(c *gin.Context) {
 
 //展示文章列表
 func Show(c *gin.Context) {
+	CheckLogin(c)
 	objID := c.Param("_id")
 	fmt.Println("------:Id:" + objID)
 	c.HTML(http.StatusOK, "showArticle.html", gin.H{"content": "dsfsdfsdf"})

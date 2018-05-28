@@ -182,7 +182,7 @@
         <nav class="navbar navbar-toggleable-lg" role="navigation">
             <div class="container-fluid">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/toLogin"><span class="glyphicon glyphicon-user"></span> 返回登录</a></li>
+                    <li><a href="/user/toLogin"><span class="glyphicon glyphicon-user"></span> 返回登录</a></li>
                 </ul>
             </div>
         </nav>
@@ -190,7 +190,8 @@
 
     <div class="login">
         <h1>Register</h1>
-        <form method="post" action="/admin/login">
+        <input type="hidden" id="message" value="{{.message}}">
+        <form method="post" action="/user/register">
             <input type="text" name="username" placeholder="Username" required="required"/>
             <input type="password" name="password" placeholder="Password" required="required"/>
             <input type="password" name="confirmPassword" placeholder="Confirm Password" required="required"/>
@@ -199,7 +200,13 @@
     </div>
 
 
-    <script src="js/index.js"></script>
+    <script type="text/javascript">
+        var mes = $('#message').val();
+        if(mes&&mes.length>0){
+            alert(mes)
+        }
+
+    </script>
 
 
 </body>
