@@ -79,6 +79,15 @@ func Query(collection string, seletor interface{}) (retData []map[string]interfa
 	return ps
 }
 
+func QueryBind(collection string, seletor interface{},bind interface{}){
+	collcetion := operator.database.C(collection)
+	err := collcetion.Find(seletor).All(bind)
+	if err!=nil{
+		panic(err)
+		return
+	}
+}
+
 //单行删除
 func Remove(collection string, seletor interface{}) error {
 	collcetion := operator.database.C(collection)

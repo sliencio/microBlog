@@ -7,36 +7,42 @@ import (
 	"microBlog/DB"
 	"gopkg.in/mgo.v2/bson"
 	"microBlog/DataManager"
-	"reflect"
 	"time"
 	"encoding/json"
 )
 
 //登陆
 func Login(c *gin.Context) {
-	fmt.Println("this is a middleware!")
 	cookie, _ := c.Cookie("session_id")
 	//直接登录
 	if DataManager.CheckUserExist(cookie) {
 		c.Redirect(http.StatusMovedPermanently, "/home")
 		return
 	} else {
-		username := c.Param("username")
-		password := c.Param("password")
+		username := c.PostForm("username")
+		password := c.PostForm("password")
 		queryRet := DB.Query("user", bson.M{"userName": username, "password": password})
+
 		//用户名或密码正确
 		if len(queryRet) > 0 {
-			_id := queryRet[0]["_id"].(string)
-			fmt.Println(_id, reflect.TypeOf(_id))
+			_id := queryRet[0]["_id"]
+			value, ok := _id.(bson.ObjectId)
+			if ok {
+				fmt.Printf("类型匹配ObjectID:%s\n", value.Hex())
+			} else {
+				fmt.Println("类型不匹配int\n")
+				return
+			}
 			//1，向浏览器设置session id
 			http.SetCookie(c.Writer, &http.Cookie{
 				Name:     "session_id",
-				Value:    _id,
+				Value:    value.String(),
 				MaxAge:   604800,
 				HttpOnly: true,
 			})
+			fmt.Println("------",value.Hex())
 			//设置session
-			DataManager.SetUserSession(_id, DataManager.UserSession{_id, username, password})
+			DataManager.SetUserSession(value.Hex(), DataManager.UserSession{value.Hex(), username, password})
 			c.Redirect(http.StatusMovedPermanently, "/home")
 			return;
 		} else {
@@ -54,8 +60,8 @@ func ToLogin(c *gin.Context) {
 func Register(c *gin.Context) {
 
 	//检查用户名是否已经存在
-	username := c.Param("username")
-	password := c.Param("password")
+	username := c.PostForm("username")
+	password := c.PostForm("password")
 	queryRet := DB.Query("user", bson.M{"userName": username})
 	//用户名
 	if len(queryRet) > 0 {

@@ -35,7 +35,7 @@ func SetUserSession(key string, userS UserSession) error{
 		panic(err)
 		return err
 	}
-	_, err2 := conn.Do("PUSH", key, value,"EX",3600)
+	_, err2 := conn.Do("SET", key, value,"EX",3600)
 	if err2 != nil {
 		panic(err2)
 		return err2
