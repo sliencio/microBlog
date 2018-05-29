@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
@@ -9,67 +10,74 @@
     <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <style type="text/css" media="screen">
-    #articleList {
-        position: absolute;
-        top: 80px;
-        bottom: 100px;
-        left: 20px;
-        right: 300px;
-        /*background-color: #9d9d9d;*/
-        overflow: auto;
-        overflow-x: hidden;
-    }
-    #classify {
-        padding: 15px 15px;
-        position: absolute;
-        top: 80px;
-        bottom: 100px;
-        right: 5px;
-        width: 300px;
-        background-color: #cccccc;
-        overflow: auto;
-        overflow-x: hidden;
-    }
+        #articleList {
+            position: absolute;
+            top: 80px;
+            bottom: 100px;
+            left: 20px;
+            right: 300px;
+            /*background-color: #9d9d9d;*/
+            overflow: auto;
+            overflow-x: hidden;
+        }
 
-    .article{
-    	height: 200px;
-        background: #d9d9d9;
-        margin-top: 20px;
-    }
-    .article_title{
-    	padding-left: 30px;
-    	font-size: 30px;
-    	font-weight: bold;
-    	color: #000;
-    }
-    .article_title:hover{
-    	color: #B22222;
-    	text-decoration: none;
-    }
-    .glyphicon-certificate{
-    	padding-left: 20px;
-    	font-size: 30px;
-    	color: #000;
-    }
-    .glyphicon-certificate:hover{
-    	color: #B22222;
-    	text-decoration: none;
-    }
+        #classify {
+            padding: 15px 15px;
+            position: absolute;
+            top: 80px;
+            bottom: 100px;
+            right: 5px;
+            width: 300px;
+            background-color: #cccccc;
+            overflow: auto;
+            overflow-x: hidden;
+        }
 
-    .articleHead span{
-    	float: right;
-    	margin-right: 30px;
-    	margin-top: 10px;
-    }
-    .articleBody{
-    	padding: 20px;
-    	color: #808080;
-    	font-size: 16px;
-    }
-    .article_detail{
-    	padding-right: 10px;
-    }
-</style>
+        .article {
+            height: 200px;
+            background: #d9d9d9;
+            margin-top: 20px;
+        }
+
+        .article_title {
+            padding-left: 30px;
+            font-size: 30px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .article_title:hover {
+            color: #B22222;
+            text-decoration: none;
+        }
+
+        .glyphicon-certificate {
+            padding-left: 20px;
+            font-size: 30px;
+            color: #000;
+        }
+
+        .glyphicon-certificate:hover {
+            color: #B22222;
+            text-decoration: none;
+        }
+
+        .articleHead span {
+            float: right;
+            margin-right: 30px;
+            margin-top: 10px;
+        }
+
+        .articleBody {
+            padding: 20px;
+            color: #808080;
+            font-size: 16px;
+        }
+
+        .article_detail {
+            padding-right: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -83,19 +91,30 @@
                 <!-- {{/*中间*/}} -->
                 <div>
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="/">首页</a></li>
-                        <li><a href="#">分类</a></li>
-                        <li><a href="/article/edit">写博客</a></li>
+                        <li class="active">
+                            <a href="/">首页</a>
+                        </li>
+                        <li>
+                            <a href="#">分类</a>
+                        </li>
+                        <li>
+                            <a href="/article/edit">写博客</a>
+                        </li>
                     </ul>
                 </div>
                 <!-- {{/*右侧*/}} -->
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/user/register"><span class="glyphicon glyphicon-user"></span> 注册</a></li>
-                    <li><a href="/user/toLogin"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li>
+                    <li>
+                        <a href="/user/register">
+                            <span class="glyphicon glyphicon-user"></span> 注册</a>
+                    </li>
+                    <li>
+                        <a href="/user/toLogin">
+                            <span class="glyphicon glyphicon-log-in"></span> 登录</a>
+                    </li>
                 </ul>
             </div>
         </nav>
-
 
 
         <!-- 文章列表 -->
@@ -103,62 +122,64 @@
             {{range .articleList}}
             <div class="article">
                 <div class="articleHead">
-                	<div >
-                     <a class="glyphicon glyphicon-certificate"></a>
-                     <a class="article_title">{{.title}}</a>
-                     <span class="article_right">
-                      <a class="article_detail">{{.time}}</a>
-                      <a class="article_detail">阅读数：{{.viewed}}</a>
-                      <a class="article_detail">评论数：{{.commented}}</a>
-                  </span>
+                    <div>
+                        <a class="glyphicon glyphicon-certificate"></a>
+                        <a class="article_title">{{.title}}</a>
+                        <span class="article_right">
+                            <a class="article_detail">{{.time}}</a>
+                            <a class="article_detail">阅读数：{{.viewed}}</a>
+                            <a class="article_detail">评论数：{{.commented}}</a>
+                        </span>
 
-              </div>
-          </div>
-          <div class="articleBody">
-            <p>{{.content}}</p>
+                    </div>
+                </div>
+                <div class="articleBody">
+                    <p>{{.content}}</p>
+                </div>
+
+            </div>
+            {{end}}
+        </div>
+
+        <!-- 分类列表 -->
+        <div class="container-fluid" id="classify">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a>
+                                文章分类
+                            </a>
+                        </h4>
+                    </div>
+                </div>
+
+                <!-- 折叠分类部分 -->
+                <div class="panel panel-success">
+                    {{range $key,$value := .classify}}
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-target="#{{ $key }}">
+                                {{ $key }}
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="{{ $key }}" class="panel-collapse collapse">
+                        <div class="collapse in">
+                            <dl>
+                                {{range $value}}
+                                <dt class="list-group-item">
+                                    <a href="#">{{.title}}</a>
+                                </dt>
+                                {{end}}
+                            </dl>
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
+            </div>
         </div>
     </div>
-    {{end}}
-</div>
-
-
-
-<!-- 分类列表 -->
-<div class="container-fluid" id="classify">
-    <div class="panel-group" id="accordion">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                 <a>
-                  文章分类
-              </a>
-          </h4>
-      </div>
-  </div>
-
-
-  <!-- 折叠分类部分 -->
-  <div class="panel panel-success">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a data-toggle="collapse" data-target="#test1">
-                C++
-            </a>
-        </h4>
-    </div>
-    <div id="test1" class="panel-collapse collapse">
-        <div class="collapse in">
-            <dl>
-               <dt class="list-group-item"><a href="#">不太鸣禽</a></dt>
-               <dt class="list-group-item"><a href="#">不太鸣禽</a></dt>
-               <dt class="list-group-item"><a href="#">不太鸣禽</a></dt>
-               <dt class="list-group-item"><a href="#">不太鸣禽</a></dt>
-           </dl>
-       </div>
-   </div>
-</div>
-</div>
 </body>
+
 </html>
-
-

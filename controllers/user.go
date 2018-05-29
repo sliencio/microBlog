@@ -9,6 +9,7 @@ import (
 	"microBlog/DataManager"
 	"time"
 	"encoding/json"
+	"strings"
 )
 
 //登陆
@@ -33,14 +34,7 @@ func Login(c *gin.Context) {
 				fmt.Println("类型不匹配int\n")
 				return
 			}
-			//1，向浏览器设置session id
-			http.SetCookie(c.Writer, &http.Cookie{
-				Name:     "session_id",
-				Value:    value.String(),
-				MaxAge:   604800,
-				HttpOnly: true,
-			})
-			fmt.Println("------",value.Hex())
+			c.SetCookie("session_id", value.Hex(), 604800, "", "localhost", false, true)
 			//设置session
 			DataManager.SetUserSession(value.Hex(), DataManager.UserSession{value.Hex(), username, password})
 			c.Redirect(http.StatusMovedPermanently, "/home")
@@ -52,6 +46,7 @@ func Login(c *gin.Context) {
 	}
 }
 
+//登录界面
 func ToLogin(c *gin.Context) {
 	c.HTML(http.StatusOK, "login.html", nil)
 }
@@ -77,12 +72,72 @@ func Register(c *gin.Context) {
 	c.HTML(http.StatusOK, "login.html", nil)
 
 }
+
+//注册界面
 func ToRegister(c *gin.Context) {
 	c.HTML(http.StatusOK, "register.html", gin.H{"message": ""})
 }
 
+//主页
 func Home(c *gin.Context) {
-	CheckLogin(c)
+	if !CheckLogin(c) {
+		return
+	}
+
+	userObjId := bson.ObjectIdHex(GetUid(c))
+
+	articleList := DB.Query("articles", bson.M{"uid": userObjId})
+	/*处理分类 处理格式如下
+		var articleList = {
+			"golang":[
+				{"title":3333,"id":333}
+				{"title":3333,"id":333}
+				{"title":3333,"id":333}
+			]
+		}
+	*/
+	//进行分类
+	tempMap := make(map[string][]map[string]string)
+	for _, m := range articleList {
+		classify := m["classify"].(string)
+		title := m["title"].(string)
+		objId := BsonObjIdToString(m["_id"])
+		oneArticle := map[string]string{"title": title, "id": objId}
+		if _, ok := tempMap[classify]; !ok {
+			//不存在
+			tempMap[classify] = make([]map[string]string,0)
+		}
+		tempMap[classify] = append(tempMap[classify],oneArticle)
+	}
+
+	typeList := DB.Query("category", bson.M{"uid": userObjId})
+	var categoryList []string
+	if len(typeList) > 0 {
+		categoryStr := typeList[0]["classify"].(string)
+		if len(categoryStr) > 0 {
+			categoryList = strings.Split(categoryStr, ",")
+		}
+	}
+
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"articleList": articleList,
+		"typeList":    categoryList,
+		"classify":    tempMap,
+	})
+}
+
+func CheckLogin(c *gin.Context) bool {
+	retBool := true
+	cookie, _ := c.Cookie("session_id")
+	//可以直接登录
+	if !DataManager.CheckUserExist(cookie) {
+		c.Redirect(302, "/user/toLogin")
+		retBool = false
+	}
+	return retBool
+}
+
+func GetUid(c *gin.Context) string {
 	var userSessionGet = DataManager.UserSession{}
 	sessionid, _ := c.Cookie("session_id")
 	ses := DataManager.GetUserSession(sessionid)
@@ -90,31 +145,14 @@ func Home(c *gin.Context) {
 	if errShal != nil {
 		fmt.Println(errShal)
 	}
-	//进行分类
-	var tempArray []string
-	tempMap :=make(map[string]int)
-	articleList := DB.Query("articles", bson.M{"uid": bson.ObjectIdHex(userSessionGet.Id)})
-	//处理分类
-	for index,m:=range articleList{
-		classify :=m["classify"].(string)
-
-		if _, ok := tempMap[classify]; ok {
-			continue
-		} else {
-			tempMap[classify] = index
-			tempArray = append(tempArray, classify)
-		}
-	}
-	c.HTML(http.StatusOK, "index.html", gin.H{
-		"articleList": articleList,
-		"typeList":    tempArray,
-	})
+	return userSessionGet.Id
 }
 
-func CheckLogin(c *gin.Context) {
-	cookie, _ := c.Cookie("session_id")
-	//可以直接登录
-	if !DataManager.CheckUserExist(cookie) {
-		c.Redirect(302, "/user/toLogin")
+func BsonObjIdToString(objId interface{}) string {
+	value, ok := objId.(bson.ObjectId)
+	if ok {
+		return value.Hex()
+	} else {
+		return ""
 	}
 }

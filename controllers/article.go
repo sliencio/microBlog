@@ -8,40 +8,82 @@ import (
 	"microBlog/model"
 	"net/http"
 	"time"
+	"strings"
 )
 
 //编辑
 func Edit(c *gin.Context) {
-	CheckLogin(c)
-	temp:="选项1,选项2,选项3,选项4,选项5,选项6"
+	if !CheckLogin(c){
+		return
+	}
+	typeList:=DB.Query("category",bson.M{"uid":bson.ObjectIdHex(GetUid(c))})
+	var categoryStr string
+	if len(typeList)>0{
+		categoryStr = typeList[0]["classify"].(string)
+	}
 	c.HTML(http.StatusOK, "edit.html", gin.H{
-		"typeList":temp,
+		"typeList":categoryStr,
 	})
-	fmt.Println("this is a middleware!")
 }
 
 //展示文章列表
 func Show(c *gin.Context) {
-	CheckLogin(c)
-	objID := c.Param("_id")
-	fmt.Println("------:Id:" + objID)
-	c.HTML(http.StatusOK, "showArticle.html", gin.H{"content": "dsfsdfsdf"})
+	if !CheckLogin(c){
+		return
+	}
+	objID := c.Param("articleId")
+	typeList:=DB.Query("articles",bson.M{"_id":bson.ObjectIdHex(objID)})
+	if len(typeList)>0{
+		c.HTML(http.StatusOK, "showArticle.html", gin.H{"content": typeList[0]})
+	}
 }
 
 //发布
 func Publish(c *gin.Context) {
+	content:=c.PostForm("content")
+	title:=c.PostForm("title")
+	classify:=c.PostForm("classify")
+	fmt.Println("-----uid----:",GetUid(c))
+
+	userObjId := bson.ObjectIdHex(GetUid(c))
+
+	typeList:=DB.Query("category",bson.M{"uid":userObjId})
+	var categoryList []string
+	var categoryStr string
+	if len(typeList)>0{
+		categoryStr = typeList[0]["classify"].(string)
+		categoryList=strings.Split(categoryStr,",")
+	}
+	var isHadClassify = false
+	for _,value :=range categoryList{
+		if value == title{
+			isHadClassify = true
+		}
+	}
+
+	//新类型，进行插入操作
+	if !isHadClassify{
+		var retInsertStr = ""
+		if len(categoryStr)>0{
+			retInsertStr=retInsertStr+","+title
+		}else{
+			retInsertStr = title
+		}
+		DB.Insert("category",bson.M{"uid":userObjId,"classify": retInsertStr})
+	}
+
+
 	article := &model.Article{
 		Id:       bson.NewObjectId(),
-		Uid:      bson.NewObjectId(),
-		Title:    "hello",
+		Uid:      userObjId,
+		Title:    title,
 		Time:     time.Now(),
-		Classify: "go",
-		Content:  "go is fine",
+		Classify: classify,
+		Content:  content,
 	}
 	err := DB.Insert("articles", article)
 	fmt.Println("err:", err)
 	if err == nil {
-		// c.Redirect(http.StatusMovedPermanently,"/home")
 		c.JSON(http.StatusOK, gin.H{
 			"ret": true,
 		})
