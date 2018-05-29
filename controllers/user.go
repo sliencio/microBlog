@@ -9,7 +9,7 @@ import (
 	"microBlog/DataManager"
 	"time"
 	"encoding/json"
-	"strings"
+	"strconv"
 )
 
 //登陆
@@ -38,7 +38,6 @@ func Login(c *gin.Context) {
 			//设置session
 			DataManager.SetUserSession(value.Hex(), DataManager.UserSession{value.Hex(), username, password})
 			c.Redirect(http.StatusMovedPermanently, "/home")
-			return;
 		} else {
 			//用户或者密码输入有误
 			c.HTML(http.StatusOK, "login.html", gin.H{"message": "用户名或者密码输入错误"})
@@ -98,11 +97,14 @@ func Home(c *gin.Context) {
 	*/
 	//进行分类
 	tempMap := make(map[string][]map[string]string)
-	for _, m := range articleList {
+	tempIDName:=make(map[string]string)
+	for index, m := range articleList {
 		classify := m["classify"].(string)
 		title := m["title"].(string)
 		objId := BsonObjIdToString(m["_id"])
 		oneArticle := map[string]string{"title": title, "id": objId}
+		tempKey := "indexId"+strconv.Itoa(index)
+		tempIDName[classify] = tempKey
 		if _, ok := tempMap[classify]; !ok {
 			//不存在
 			tempMap[classify] = make([]map[string]string,0)
@@ -110,18 +112,9 @@ func Home(c *gin.Context) {
 		tempMap[classify] = append(tempMap[classify],oneArticle)
 	}
 
-	typeList := DB.Query("category", bson.M{"uid": userObjId})
-	var categoryList []string
-	if len(typeList) > 0 {
-		categoryStr := typeList[0]["classify"].(string)
-		if len(categoryStr) > 0 {
-			categoryList = strings.Split(categoryStr, ",")
-		}
-	}
-
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"articleList": articleList,
-		"typeList":    categoryList,
+		"typeList":    tempIDName,
 		"classify":    tempMap,
 	})
 }

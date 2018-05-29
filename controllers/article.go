@@ -45,37 +45,41 @@ func Publish(c *gin.Context) {
 	classify:=c.PostForm("classify")
 	fmt.Println("-----uid----:",GetUid(c))
 
-	userObjId := bson.ObjectIdHex(GetUid(c))
+	userObjID := bson.ObjectIdHex(GetUid(c))
 
-	typeList:=DB.Query("category",bson.M{"uid":userObjId})
+	typeList:=DB.Query("category",bson.M{"uid":userObjID})
 	var categoryList []string
-	var categoryStr string
+ 	var categoryStr string
+	//用户已经有分类
 	if len(typeList)>0{
 		categoryStr = typeList[0]["classify"].(string)
 		categoryList=strings.Split(categoryStr,",")
-	}
-	var isHadClassify = false
-	for _,value :=range categoryList{
-		if value == title{
-			isHadClassify = true
+		var isHadClassify = false
+		for _,value :=range categoryList{
+			if value == classify{
+				isHadClassify = true
+			}
 		}
-	}
 
-	//新类型，进行插入操作
-	if !isHadClassify{
-		var retInsertStr = ""
-		if len(categoryStr)>0{
-			retInsertStr=retInsertStr+","+title
-		}else{
-			retInsertStr = title
+		//新类型，进行插入操作
+		if !isHadClassify{
+			var retInsertStr = ""
+			if len(categoryStr)>0{
+				retInsertStr=categoryStr+","+classify
+			}else{
+				retInsertStr = classify
+			}
+			DB.Update("category",bson.M{"uid":userObjID},bson.M{"classify": retInsertStr})
 		}
-		DB.Insert("category",bson.M{"uid":userObjId,"classify": retInsertStr})
+	
+	}else{
+		//用户尚未设置分类
+		DB.Insert("category",bson.M{"uid":userObjID,"classify": classify})
 	}
-
 
 	article := &model.Article{
 		Id:       bson.NewObjectId(),
-		Uid:      userObjId,
+		Uid:      userObjID,
 		Title:    title,
 		Time:     time.Now(),
 		Classify: classify,

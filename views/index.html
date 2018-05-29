@@ -81,105 +81,116 @@
 </head>
 
 <body>
-    <div class="container">
-        <nav class="navbar navbar-toggleable-lg" role="navigation">
-            <div class="container-fluid">
-                <!-- {{/*标题*/}} -->
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="/">我的博客</a>
-                </div>
-                <!-- {{/*中间*/}} -->
-                <div>
-                    <ul class="nav navbar-nav">
-                        <li class="active">
-                            <a href="/">首页</a>
-                        </li>
-                        <li>
-                            <a href="#">分类</a>
-                        </li>
-                        <li>
-                            <a href="/article/edit">写博客</a>
-                        </li>
-                    </ul>
-                </div>
-                <!-- {{/*右侧*/}} -->
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="/user/register">
-                            <span class="glyphicon glyphicon-user"></span> 注册</a>
+<div class="container">
+    <nav class="navbar navbar-toggleable-lg" role="navigation">
+        <div class="container-fluid">
+            <!-- {{/*标题*/}} -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">我的博客</a>
+            </div>
+            <!-- {{/*中间*/}} -->
+            <div>
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="/">首页</a>
                     </li>
                     <li>
-                        <a href="/user/toLogin">
-                            <span class="glyphicon glyphicon-log-in"></span> 登录</a>
+                        <a href="#">分类</a>
+                    </li>
+                    <li>
+                        <a href="/article/edit">写博客</a>
                     </li>
                 </ul>
             </div>
-        </nav>
+            <!-- {{/*右侧*/}} -->
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/user/register">
+                        <span class="glyphicon glyphicon-user"></span> 注册</a>
+                </li>
+                <li>
+                    <a href="/user/toLogin">
+                        <span class="glyphicon glyphicon-log-in"></span> 登录</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
 
-        <!-- 文章列表 -->
-        <div class="container-fluid" id="articleList">
-            {{range .articleList}}
-            <div class="article">
-                <div class="articleHead">
-                    <div>
-                        <a class="glyphicon glyphicon-certificate"></a>
-                        <a class="article_title">{{.title}}</a>
-                        <span class="article_right">
+    <!-- 文章列表 -->
+    <div class="container-fluid" id="articleList">
+    {{range .articleList}}
+        <div class="article">
+            <div class="articleHead">
+                <div>
+                    <a class="glyphicon glyphicon-certificate"></a>
+                    <a class="article_title">{{.title}}</a>
+                    <span class="article_right">
                             <a class="article_detail">{{.time}}</a>
                             <a class="article_detail">阅读数：{{.viewed}}</a>
                             <a class="article_detail">评论数：{{.commented}}</a>
                         </span>
 
-                    </div>
                 </div>
-                <div class="articleBody">
-                    <p>{{.content}}</p>
-                </div>
-
             </div>
-            {{end}}
+            <div class="articleBody">
+                <p class="articleContent">{{.content}}</p>
+            </div>
+
         </div>
+    {{end}}
+    </div>
 
-        <!-- 分类列表 -->
-        <div class="container-fluid" id="classify">
-            <div class="panel-group" id="accordion">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a>
-                                文章分类
-                            </a>
-                        </h4>
+    <!-- 分类列表 -->
+    <div class="container-fluid" id="classify">
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a>
+                            文章分类
+                        </a>
+                    </h4>
+                </div>
+            </div>
+
+            <!-- 折叠分类部分 -->
+            <div class="panel panel-success">
+            {{range $key,$value := .classify}}
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-target="#{{ $key }}">
+                        {{ $key }}
+                        </a>
+                    </h4>
+                </div>
+                <div id="{{ $key }}" class="panel-collapse collapse">
+                    <div class="collapse in">
+                        <dl>
+                        {{range $value}}
+                            <dt class="list-group-item">
+                                <a href="#">{{.title}}</a>
+                            </dt>
+                        {{end}}
+                        </dl>
                     </div>
                 </div>
-
-                <!-- 折叠分类部分 -->
-                <div class="panel panel-success">
-                    {{range $key,$value := .classify}}
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-target="#{{ $key }}">
-                                {{ $key }}
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="{{ $key }}" class="panel-collapse collapse">
-                        <div class="collapse in">
-                            <dl>
-                                {{range $value}}
-                                <dt class="list-group-item">
-                                    <a href="#">{{.title}}</a>
-                                </dt>
-                                {{end}}
-                            </dl>
-                        </div>
-                    </div>
-                    {{end}}
-                </div>
+            {{end}}
             </div>
         </div>
     </div>
+</div>
+
+<script type="text/javascript">
+    $(".articleContent").each(function (index, element) {
+        var content = $(this);
+        var text = element.innerHTML;
+        if (text.length > 80) {
+            text = text.substring(0, 280) + "...";
+        }
+        element.innerHTML = text;
+    });
+</script>
 </body>
 
 </html>
