@@ -75,7 +75,17 @@
         }
 
         .article_detail {
-            padding-right: 10px;
+            padding-right: 15px;
+        }
+        .article_bottom{
+            float: right;
+            background: #002D57;
+            width: 200px;
+            height: 40px;
+            padding-left: 20px;
+            margin-right: 20px;
+            margin-top: -20px;
+            display: none;
         }
     </style>
 </head>
@@ -102,6 +112,10 @@
                 <!-- {{/*右侧*/}} -->
                 <ul class="nav navbar-nav navbar-right">
                     <li>
+                        <a href="/article/example">
+                            <span class="glyphicon glyphicon-question-sign"></span>帮助</a>
+                     </li>
+                    <li>
                         <a href="#">
                             <span class="glyphicon glyphicon-user"></span> {{.UserName}}</a>
                     </li>
@@ -113,7 +127,7 @@
         <!-- 文章列表 -->
         <div class="container-fluid" id="articleList">
             {{range .articleList}}
-            <div class="article">
+            <div class="article" onMouseOver="javascript:show(this,'mydiv1');" onMouseOut="hide(this,'mydiv1')">
                 <div class="articleHead">
                     <div>
                         <a class="glyphicon glyphicon-certificate"></a>
@@ -122,12 +136,19 @@
                             <a class="article_detail">{{.time}}</a>
                             <a class="article_detail">阅读数：{{.viewed}}</a>
                             <a class="article_detail">评论数：{{.commented}}</a>
+                            <a class="article_detail" href="#">赞</a>
                         </span>
 
                     </div>
                 </div>
                 <div class="articleBody">
                     <p class="articleContent">{{.content}}</p>
+                </div>
+                <div class="editDiv">
+                    <span class="article_bottom">
+                        <a class="article_detail">编辑</a>
+                        <a class="article_detail">删除</a>
+                    </span>
                 </div>
 
             </div>
@@ -198,6 +219,19 @@
             }
             element.innerHTML = text;
         });
+
+
+
+        function show(obj,id) {
+            var objDiv = $("#"+id+"");
+            $(objDiv).css("display","block");
+            $(objDiv).css("left", event.clientX);
+            $(objDiv).css("top", event.clientY + 10);
+        }
+        function hide(obj,id) {
+            var objDiv = $("#"+id+"");
+            $(objDiv).css("display", "none");
+        }
     </script>
 </body>
 

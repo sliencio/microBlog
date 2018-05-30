@@ -13,75 +13,79 @@ import (
 
 //编辑
 func Edit(c *gin.Context) {
-	if !CheckLogin(c){
+	if !CheckLogin(c) {
 		return
 	}
-	typeList:=DB.Query("category",bson.M{"uid":bson.ObjectIdHex(GetUid(c))})
+	typeList := DB.Query("category", bson.M{"uid": bson.ObjectIdHex(GetUid(c))})
 	var categoryStr string
-	if len(typeList)>0{
+	if len(typeList) > 0 {
 		categoryStr = typeList[0]["classify"].(string)
 	}
 	c.HTML(http.StatusOK, "edit.html", gin.H{
-		"typeList":categoryStr,
+		"typeList": categoryStr,
 	})
 }
 
 //展示文章列表
 func Show(c *gin.Context) {
-	if !CheckLogin(c){
+	if !CheckLogin(c) {
 		return
 	}
-	objIDStr :=c.Param("articleId")
-	objID := bson.ObjectIdHex(strings.Split(objIDStr,"\"")[1])
-	fmt.Println("--------",objID)
+	objIDStr := c.Param("articleId")
+	objID := bson.ObjectIdHex(strings.Split(objIDStr, "\"")[1])
+	fmt.Println("--------", objID)
 	//return
-	typeList:=DB.Query("articles",bson.M{"_id":objID})
-	if len(typeList)>0{
-		article:=typeList[0]
-		viewCount:=article["viewed"].(int64)
+	typeList := DB.Query("articles", bson.M{"_id": objID})
+	if len(typeList) > 0 {
+		article := typeList[0]
+		viewCount := article["viewed"].(int64)
 		//更新阅读人数
-		DB.Update("articles",bson.M{"_id":objID},bson.M{"viewed":viewCount+1})
+		DB.Update("articles", bson.M{"_id": objID}, bson.M{"viewed": viewCount + 1})
 		c.HTML(http.StatusOK, "showArticle.html", gin.H{"content": article})
 	}
+}
+//帮助
+func Example(c *gin.Context) {
+	c.HTML(http.StatusOK, "exampleTemplate.html", nil)
 }
 
 //发布
 func Publish(c *gin.Context) {
-	content:=c.PostForm("content")
-	title:=c.PostForm("title")
-	classify:=c.PostForm("classify")
-	fmt.Println("-----uid----:",GetUid(c))
+	content := c.PostForm("content")
+	title := c.PostForm("title")
+	classify := c.PostForm("classify")
+	fmt.Println("-----uid----:", GetUid(c))
 
 	userObjID := bson.ObjectIdHex(GetUid(c))
 
-	typeList:=DB.Query("category",bson.M{"uid":userObjID})
+	typeList := DB.Query("category", bson.M{"uid": userObjID})
 	var categoryList []string
- 	var categoryStr string
+	var categoryStr string
 	//用户已经有分类
-	if len(typeList)>0{
+	if len(typeList) > 0 {
 		categoryStr = typeList[0]["classify"].(string)
-		categoryList=strings.Split(categoryStr,",")
+		categoryList = strings.Split(categoryStr, ",")
 		var isHadClassify = false
-		for _,value :=range categoryList{
-			if value == classify{
+		for _, value := range categoryList {
+			if value == classify {
 				isHadClassify = true
 			}
 		}
 
 		//新类型，进行插入操作
-		if !isHadClassify{
+		if !isHadClassify {
 			var retInsertStr = ""
-			if len(categoryStr)>0{
-				retInsertStr=categoryStr+","+classify
-			}else{
+			if len(categoryStr) > 0 {
+				retInsertStr = categoryStr + "," + classify
+			} else {
 				retInsertStr = classify
 			}
-			DB.Update("category",bson.M{"uid":userObjID},bson.M{"classify": retInsertStr})
+			DB.Update("category", bson.M{"uid": userObjID}, bson.M{"classify": retInsertStr})
 		}
-	
-	}else{
+
+	} else {
 		//用户尚未设置分类
-		DB.Insert("category",bson.M{"uid":userObjID,"classify": classify})
+		DB.Insert("category", bson.M{"uid": userObjID, "classify": classify})
 	}
 
 	article := &model.Article{

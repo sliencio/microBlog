@@ -21,6 +21,7 @@ func init(){
 		article.GET("/edit",controllers.Edit)
 		article.POST("/publish",controllers.Publish)
 		article.GET("/show/:articleId",controllers.Show)
+		article.GET("/example",controllers.Example)
 	}
 
 	//用户操作
