@@ -20,7 +20,7 @@ func init(){
 		article.GET("/",controllers.Home)
 		article.GET("/edit",controllers.Edit)
 		article.POST("/publish",controllers.Publish)
-		article.GET("/show",controllers.Show)
+		article.GET("/show/:articleId",controllers.Show)
 	}
 
 	//用户操作

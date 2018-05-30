@@ -34,16 +34,16 @@
         }
 
         .article {
-            height: 200px;
+            height: 150px;
             background: #d9d9d9;
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
         .article_title {
             padding-left: 30px;
-            font-size: 30px;
+            font-size: 24px;
             font-weight: bold;
-            color: #000;
+            color: rgb(19, 17, 17);
         }
 
         .article_title:hover {
@@ -81,116 +81,124 @@
 </head>
 
 <body>
-<div class="container">
-    <nav class="navbar navbar-toggleable-lg" role="navigation">
-        <div class="container-fluid">
-            <!-- {{/*标题*/}} -->
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/">我的博客</a>
-            </div>
-            <!-- {{/*中间*/}} -->
-            <div>
-                <ul class="nav navbar-nav">
-                    <li class="active">
-                        <a href="/">首页</a>
-                    </li>
+    <div class="container">
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <!-- {{/*标题*/}} -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">我的博客</a>
+                </div>
+                <!-- {{/*中间*/}} -->
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li class="active">
+                            <a href="/">首页</a>
+                        </li>
+                        <li>
+                            <a href="/article/edit">写博客</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- {{/*右侧*/}} -->
+                <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="#">分类</a>
-                    </li>
-                    <li>
-                        <a href="/article/edit">写博客</a>
+                        <a href="#">
+                            <span class="glyphicon glyphicon-user"></span> {{.UserName}}</a>
                     </li>
                 </ul>
             </div>
-            <!-- {{/*右侧*/}} -->
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a href="/user/register">
-                        <span class="glyphicon glyphicon-user"></span> 注册</a>
-                </li>
-                <li>
-                    <a href="/user/toLogin">
-                        <span class="glyphicon glyphicon-log-in"></span> 登录</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+        </nav>
 
 
-    <!-- 文章列表 -->
-    <div class="container-fluid" id="articleList">
-    {{range .articleList}}
-        <div class="article">
-            <div class="articleHead">
-                <div>
-                    <a class="glyphicon glyphicon-certificate"></a>
-                    <a class="article_title">{{.title}}</a>
-                    <span class="article_right">
+        <!-- 文章列表 -->
+        <div class="container-fluid" id="articleList">
+            {{range .articleList}}
+            <div class="article">
+                <div class="articleHead">
+                    <div>
+                        <a class="glyphicon glyphicon-certificate"></a>
+                        <a class="article_title" href="/article/show/{{._id}}">{{.title}}</a>
+                        <span class="article_right">
                             <a class="article_detail">{{.time}}</a>
                             <a class="article_detail">阅读数：{{.viewed}}</a>
                             <a class="article_detail">评论数：{{.commented}}</a>
                         </span>
 
-                </div>
-            </div>
-            <div class="articleBody">
-                <p class="articleContent">{{.content}}</p>
-            </div>
-
-        </div>
-    {{end}}
-    </div>
-
-    <!-- 分类列表 -->
-    <div class="container-fluid" id="classify">
-        <div class="panel-group" id="accordion">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a>
-                            文章分类
-                        </a>
-                    </h4>
-                </div>
-            </div>
-
-            <!-- 折叠分类部分 -->
-            <div class="panel panel-success">
-            {{range $key,$value := .classify}}
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-target="#{{ $key }}">
-                        {{ $key }}
-                        </a>
-                    </h4>
-                </div>
-                <div id="{{ $key }}" class="panel-collapse collapse">
-                    <div class="collapse in">
-                        <dl>
-                        {{range $value}}
-                            <dt class="list-group-item">
-                                <a href="#">{{.title}}</a>
-                            </dt>
-                        {{end}}
-                        </dl>
                     </div>
                 </div>
+                <div class="articleBody">
+                    <p class="articleContent">{{.content}}</p>
+                </div>
+
+            </div>
             {{end}}
+        </div>
+
+        <!-- 分类列表 -->
+        <div class="container-fluid" id="classify">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a>
+                                文章分类
+                            </a>
+                        </h4>
+                    </div>
+                </div>
+
+                <!-- 折叠分类部分 -->
+                <div class="panel panel-success" id="articleListDiv">
+                    {{range $key,$value := .classify}}
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-target="#{{ $key }}">
+                                {{ $key }}
+                                <span class="badge pull-right">{{len $value}}</span>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="{{ $key }}" class="panel-collapse collapse">
+                        <div class="collapse in">
+                            <dl>
+                                {{range $value}}
+                                <dt class="list-group-item">
+                                    <a href="/article/show/{{.id}}">{{.title}}</a>
+                                </dt>
+                                {{end}}
+                            </dl>
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script type="text/javascript">
-    $(".articleContent").each(function (index, element) {
-        var content = $(this);
-        var text = element.innerHTML;
-        if (text.length > 80) {
-            text = text.substring(0, 280) + "...";
-        }
-        element.innerHTML = text;
-    });
-</script>
+    <script type="text/javascript">
+        $('a[data-target*="+"]').each(function (index, element) {
+            var oldId = $(this).attr("data-target");
+            var newID = oldId.replace(/\+/g, "temp")
+            $(this).attr('data-target', newID);
+        });
+
+        $('div[id*="+"]').each(function (index, element) {
+            var oldId = $(this).attr("id");
+            var newID = oldId.replace(/\+/g, "temp")
+            $(this).attr('id', newID);
+        });
+
+
+
+        $(".articleContent").each(function (index, element) {
+            var content = $(this);
+            var text = element.innerHTML;
+            if (text.length > 80) {
+                text = text.substring(0, 280) + "...";
+            }
+            element.innerHTML = text;
+        });
+    </script>
 </body>
 
 </html>

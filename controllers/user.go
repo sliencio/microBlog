@@ -9,7 +9,6 @@ import (
 	"microBlog/DataManager"
 	"time"
 	"encoding/json"
-	"strconv"
 )
 
 //登陆
@@ -96,26 +95,23 @@ func Home(c *gin.Context) {
 		}
 	*/
 	//进行分类
-	tempMap := make(map[string][]map[string]string)
-	tempIDName:=make(map[string]string)
-	for index, m := range articleList {
+	tempMap := make(map[string][]map[string]interface{})
+	for _, m := range articleList {
 		classify := m["classify"].(string)
 		title := m["title"].(string)
-		objId := BsonObjIdToString(m["_id"])
-		oneArticle := map[string]string{"title": title, "id": objId}
-		tempKey := "indexId"+strconv.Itoa(index)
-		tempIDName[classify] = tempKey
+		//objId := BsonObjIdToString(m["_id"])
+		oneArticle := map[string]interface{}{"title": title, "id": m["_id"]}
 		if _, ok := tempMap[classify]; !ok {
 			//不存在
-			tempMap[classify] = make([]map[string]string,0)
+			tempMap[classify] = make([]map[string]interface{},0)
 		}
 		tempMap[classify] = append(tempMap[classify],oneArticle)
 	}
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"articleList": articleList,
-		"typeList":    tempIDName,
-		"classify":    tempMap,
+		"articleList"	: articleList,
+		"classify"		: tempMap,
+		"UserName"		: GetUname(c),
 	})
 }
 
@@ -139,6 +135,16 @@ func GetUid(c *gin.Context) string {
 		fmt.Println(errShal)
 	}
 	return userSessionGet.Id
+}
+func GetUname(c *gin.Context)string{
+	var userSessionGet = DataManager.UserSession{}
+	sessionid, _ := c.Cookie("session_id")
+	ses := DataManager.GetUserSession(sessionid)
+	errShal := json.Unmarshal([]byte(ses), &userSessionGet)
+	if errShal != nil {
+		fmt.Println(errShal)
+	}
+	return userSessionGet.UserName
 }
 
 func BsonObjIdToString(objId interface{}) string {

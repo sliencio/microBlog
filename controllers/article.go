@@ -31,10 +31,17 @@ func Show(c *gin.Context) {
 	if !CheckLogin(c){
 		return
 	}
-	objID := c.Param("articleId")
-	typeList:=DB.Query("articles",bson.M{"_id":bson.ObjectIdHex(objID)})
+	objIDStr :=c.Param("articleId")
+	objID := bson.ObjectIdHex(strings.Split(objIDStr,"\"")[1])
+	fmt.Println("--------",objID)
+	//return
+	typeList:=DB.Query("articles",bson.M{"_id":objID})
 	if len(typeList)>0{
-		c.HTML(http.StatusOK, "showArticle.html", gin.H{"content": typeList[0]})
+		article:=typeList[0]
+		viewCount:=article["viewed"].(int64)
+		//更新阅读人数
+		DB.Update("articles",bson.M{"_id":objID},bson.M{"viewed":viewCount+1})
+		c.HTML(http.StatusOK, "showArticle.html", gin.H{"content": article})
 	}
 }
 

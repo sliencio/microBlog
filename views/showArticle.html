@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh">
+
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <title>editor</title>
     <!-- bootstrap -->
     <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -9,67 +10,70 @@
     <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!-- editor.md -->
-    <link rel="stylesheet" href="../static/editor/css/style.css"/>
-    <link rel="stylesheet" href="../static/editor/css/editormd.css"/>
+    <link rel="stylesheet" href="/editor/css/style.css" />
+    <link rel="stylesheet" href="/editor/css/editormd.css" />
 
     <style type="text/css" media="screen">
-    .container {
-        width: 92%;
-        margin-top: 10px;
-        margin-bottom: 20px;
-        /*background: #d377d4;*/
-    }
+        .container {
+            width: 92%;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            /*background: #d377d4;*/
+        }
 
-    #choseTypeTitle {
-        float: left;
-        margin-top: 5px;
-        margin-left: 50px;
-        display: block;
-        color: #00BFFF;
-    }
-
-</style>
+        #choseTypeTitle {
+            float: left;
+            margin-top: 5px;
+            margin-left: 50px;
+            display: block;
+            color: #00BFFF;
+        }
+    </style>
 </head>
+
 <body>
-    <p type="hidden" id="articleData">{{.content}}</p>
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
-            <!-- {{/*标题*/}} -->
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">我的文章</a>
             </div>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/home"><span class="glyphicon glyphicon-home"></span> 返回首页</a></li>
+                <li>
+                    <a href="/home">
+                        <span class="glyphicon glyphicon-home"></span> 返回首页</a>
+                </li>
             </ul>
         </div>
     </nav>
 
     <div class="container-fluid">
         <div class="container">
-            <h3 id="choseTypeTitle">文章标题</h3>
+            <h3 id="choseTypeTitle">{{.content.title}}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span class="label label-default">{{.content.title}}</span></h3>
         </div>
 
         <div id="test-editormd"></div>
     </div>
 
-    <script src="../static/editor/js/jquery.min.js"></script>
-    <script src="../static/editor/js/editormd.min.js"></script>
+    <script src="/editor/js/jquery.min.js"></script>
+    <script src="/editor/js/editormd.min.js"></script>
     <script type="text/javascript">
         var testEditor;
         $(function () {
-            var test = $('#articleData').text();
+            var article = {{.content}};
+            var content = article.content;
             testEditor = editormd("test-editormd", {
-                width        : "90%",
-                autoHeight   : true,
-                readOnly     : true,
-                watch        : false,
-                markdown     : test,
-                theme        : (localStorage.theme) ? localStorage.theme : "default",
-                previewTheme : (localStorage.previewTheme) ? localStorage.previewTheme : "default",
-                editorTheme  : (localStorage.editorTheme) ? localStorage.editorTheme : "default",
-                path         : '../static/editor/lib/'
+                width: "90%",
+                autoHeight: true,
+                readOnly: true,
+                watch: false,
+                markdown: content,
+                theme: (localStorage.theme) ? localStorage.theme : "default",
+                previewTheme: (localStorage.previewTheme) ? localStorage.previewTheme : "default",
+                editorTheme: (localStorage.editorTheme) ? localStorage.editorTheme : "default",
+                path: '/editor/lib/'
             });
         });
     </script>
 </body>
+
 </html>
