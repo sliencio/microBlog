@@ -49,6 +49,28 @@ func Example(c *gin.Context) {
 	c.HTML(http.StatusOK, "exampleTemplate.html", nil)
 }
 
+//删除
+func Delete(c *gin.Context) {
+	if !CheckLogin(c) {
+		return
+	}
+	objIDStr := c.Param("articleId")
+	objID := bson.ObjectIdHex(objIDStr)
+	typeList := DB.Query("articles", bson.M{"_id": objID})
+	if len(typeList) > 0 {
+		//更新阅读人数
+		err:=DB.Remove("articles", bson.M{"_id": objID})
+		if err==nil{
+			c.String(302,"ok")
+		}
+	}
+}
+
+//编辑
+func ReEdit(c *gin.Context) {
+	c.HTML(http.StatusOK, "exampleTemplate.html", nil)
+}
+
 //发布
 func Publish(c *gin.Context) {
 	content := c.PostForm("content")
