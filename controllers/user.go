@@ -13,34 +13,27 @@ import (
 
 //登陆
 func Login(c *gin.Context) {
-	cookie, _ := c.Cookie("session_id")
-	//直接登录
-	if DataManager.CheckUserExist(cookie) {
-		c.Redirect(http.StatusMovedPermanently, "/home")
-		return
-	} else {
-		username := c.PostForm("username")
-		password := c.PostForm("password")
-		queryRet := DB.Query("user", bson.M{"userName": username, "password": password})
+	username := c.PostForm("username")
+	password := c.PostForm("password")
+	queryRet := DB.Query("user", bson.M{"userName": username, "password": password})
 
-		//用户名或密码正确
-		if len(queryRet) > 0 {
-			_id := queryRet[0]["_id"]
-			value, ok := _id.(bson.ObjectId)
-			if ok {
-				fmt.Printf("类型匹配ObjectID:%s\n", value.Hex())
-			} else {
-				fmt.Println("类型不匹配int\n")
-				return
-			}
-			c.SetCookie("session_id", value.Hex(), 604800, "", "localhost", false, true)
-			//设置session
-			DataManager.SetUserSession(value.Hex(), DataManager.UserSession{value.Hex(), username, password})
-			c.Redirect(http.StatusMovedPermanently, "/home")
+	//用户名或密码正确
+	if len(queryRet) > 0 {
+		_id := queryRet[0]["_id"]
+		value, ok := _id.(bson.ObjectId)
+		if ok {
+			fmt.Printf("类型匹配ObjectID:%s\n", value.Hex())
 		} else {
-			//用户或者密码输入有误
-			c.HTML(http.StatusOK, "login.html", gin.H{"message": "用户名或者密码输入错误"})
+			fmt.Println("类型不匹配int\n")
+			return
 		}
+		c.SetCookie("session_id", value.Hex(), 604800, "", "localhost", false, true)
+		//设置session
+		DataManager.SetUserSession(value.Hex(), DataManager.UserSession{value.Hex(), username, password})
+		c.Redirect(http.StatusMovedPermanently, "/home")
+	} else {
+		//用户或者密码输入有误
+		c.HTML(http.StatusOK, "login.html", gin.H{"message": "用户名或者密码输入错误"})
 	}
 }
 
