@@ -82,18 +82,20 @@ func Publish(c *gin.Context) {
 	content := c.PostForm("content")
 	title := c.PostForm("title")
 	classify := c.PostForm("classify")
+	theme := c.PostForm("theme")
 
 	userObjID := bson.ObjectIdHex(GetUid(c))
 	//检查该类型是否为新类型。如果是新类型，就加上，如果不是，就不管
 	checkClassifyIsNew(userObjID,classify)
 
 	article := &model.Article{
-		Id:       bson.NewObjectId(),
-		Uid:      userObjID,
-		Title:    title,
-		Time:     time.Now(),
-		Classify: classify,
-		Content:  content,
+		Id		:bson.NewObjectId(),
+		Uid		:userObjID,
+		Title	:title,
+		Time	:time.Now(),
+		Classify:classify,
+		Content	:content,
+		Theme	:theme,
 	}
 	err := DB.Insert("articles", article)
 	fmt.Println("err:", err)
@@ -114,6 +116,7 @@ func RePublish(c *gin.Context) {
 	title := c.PostForm("title")
 	classify := c.PostForm("classify")
 	articleIdStr := c.PostForm("articleId")
+	theme := c.PostForm("theme")
 	userObjID := bson.ObjectIdHex(GetUid(c))
 
 	articleId := bson.ObjectIdHex(articleIdStr)
@@ -122,7 +125,7 @@ func RePublish(c *gin.Context) {
 	checkClassifyIsNew(userObjID,classify)
 
 	//进行更新操作
-	err := DB.Update("articles", bson.M{"_id":articleId},bson.M{"title":title,"time":time.Now(),"classify":classify,"content":content})
+	err := DB.Update("articles", bson.M{"_id":articleId},bson.M{"title":title,"time":time.Now(),"classify":classify,"content":content,"theme":theme})
 	fmt.Println("err:", err)
 	if err == nil {
 		c.JSON(http.StatusOK, gin.H{

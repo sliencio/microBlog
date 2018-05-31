@@ -15,8 +15,8 @@
 
     <style type="text/css" media="screen">
     .container {
-        width: 92%;
-        margin-top: 10px;
+        width: 93%;
+        margin-top: 80px;
         margin-bottom: 20px;
         /*background: #d377d4;*/
     }
@@ -101,6 +101,59 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="/">修改博客</a>
+            <ul class="nav navbar-nav" >
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown">更换编辑主题<b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu" style="height:300px;overflow:scroll">
+                        <li><a class="toggleItem">default</a></li>
+                        <li><a class="toggleItem">3024-day</a></li>
+                        <li><a class="toggleItem">3024-night</a></li>
+                        <li><a class="toggleItem">ambiance</a></li>
+                        <li><a class="toggleItem">ambiance-mobile</a></li>
+                        <li><a class="toggleItem">base16-dark</a></li>
+                        <li><a class="toggleItem">base16-light</a></li>
+                        <li><a class="toggleItem">blackboard</a></li>
+                        <li class="divider"></li>
+                        <li><a class="toggleItem">cobalt</a></li>
+                        <li><a class="toggleItem">eclipse</a></li>
+                        <li><a class="toggleItem">elegant</a></li>
+                        <li><a class="toggleItem">erlang-dark</a></li>
+                        <li><a class="toggleItem">lesser-dark</a></li>
+                        <li><a class="toggleItem">mbo</a></li>
+                        <li><a class="toggleItem">mdn-like</a></li>
+                        <li><a class="toggleItem">midnight</a></li>
+                        <li class="divider"></li>
+                        <li><a class="toggleItem">monokai</a></li>
+                        <li><a class="toggleItem">neat</a></li>
+                        <li><a class="toggleItem">neo</a></li>
+                        <li><a class="toggleItem">night</a></li>
+                        <li><a class="toggleItem">paraiso-dark</a></li>
+                        <li><a class="toggleItem">paraiso-light</a></li>
+                        <li><a class="toggleItem">pastel-on-dark</a></li>
+                        <li><a class="toggleItem">rubyblue</a></li>
+                        <li class="divider"></li>
+                        <li><a class="toggleItem">solarized</a></li>
+                        <li><a class="toggleItem">the-matrix</a></li>
+                        <li><a class="toggleItem">tomorrow-night-eighties</a></li>
+                        <li><a class="toggleItem">twilight</a></li>
+                        <li><a class="toggleItem">vibrant-ink</a></li>
+                        <li><a class="toggleItem">xq-dark</a></li>
+                        <li><a class="toggleItem">xq-light</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav" >
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown">更换预览主题<b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="togglePreviewItem">default</a></li>
+                        <li><a class="togglePreviewItem">dark</a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
         <div class="navbar-collapse collapse">
 
@@ -191,6 +244,17 @@
             path: '/editor/lib/'
         });
 
+        $(".toggleItem").click(function(){
+            let dataname = $(this).text();
+            testEditor.setCodeMirrorTheme(dataname);
+        });
+
+        $(".togglePreviewItem").click(function(){
+            let dataname = $(this).text();
+            finalTheme = dataname;
+            testEditor.setPreviewTheme(dataname);
+        });
+
         $('#publish').on('click', function (event) {
             finalType = $("#newTypeInput").val()
 
@@ -210,7 +274,8 @@
                 "content": articleContent,
                 "title": blogTitle,
                 "classify": finalType,
-                "articleId": article["_id"]
+                "articleId": article["_id"],
+                "theme":finalTheme,
             }, function (data) {
                 if (data["ret"]) {
                     if (confirm("更新成功")) {

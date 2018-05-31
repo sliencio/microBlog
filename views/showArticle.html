@@ -16,10 +16,11 @@
 
     <style type="text/css" media="screen">
         .container {
-            width: 92%;
-            margin-top: 10px;
-            margin-bottom: 20px;
-            /*background: #d377d4;*/
+            width: 90%;
+            margin-top: 80px;
+            margin-bottom: 10px;
+            background: #75787b;
+            height: 50px;
         }
 
         #choseTypeTitle {
@@ -70,6 +71,7 @@
         $(function () {
             var article = {{.content}};
             var content = article.content;
+            var theme = article.theme;
             testEditor = editormd("test-editormd", {
                 width: "90%",
                 height: 740,
@@ -80,6 +82,7 @@
                 searchReplace : true,
                 toolbar  : true,             //关闭工具栏
                 theme: (localStorage.theme) ? localStorage.theme : "default",
+                previewTheme: (localStorage.previewTheme) ? localStorage.previewTheme : theme,
                 path: '/editor/lib/',
                 toolbarIcons : function() {
                     return ["preview"]

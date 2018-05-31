@@ -14,6 +14,7 @@ type Article struct {
 	Content   string        `bson:"content"`
 	Viewed    int64         `bson:"viewed"`
 	Commented int64         `bson:"commented"`
+	Theme	  string		`bson:"theme"`
 }
 type Comment struct {
 	Id          bson.ObjectId `bson:"_id"`
