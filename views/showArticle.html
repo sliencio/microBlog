@@ -12,6 +12,7 @@
     <!-- editor.md -->
     <link rel="stylesheet" href="/editor/css/style.css" />
     <link rel="stylesheet" href="/editor/css/editormd.css" />
+    
 
     <style type="text/css" media="screen">
         .container {
@@ -65,14 +66,22 @@
             var content = article.content;
             testEditor = editormd("test-editormd", {
                 width: "90%",
-                autoHeight: true,
-                readOnly: true,
-                watch: false,
-                markdown: content,
+                height: 740,
+                previewTheme : "default",
+                markdown : content,
+                codeFold : true,
+                preview:true,
+                searchReplace : true,
+                toolbar  : true,             //关闭工具栏
                 theme: (localStorage.theme) ? localStorage.theme : "default",
-                previewTheme: (localStorage.previewTheme) ? localStorage.previewTheme : "default",
-                editorTheme: (localStorage.editorTheme) ? localStorage.editorTheme : "default",
-                path: '/editor/lib/'
+                path: '/editor/lib/',
+                toolbarIcons : function() {
+                    return ["preview"]
+                },
+                onload:function () {
+                    var test = $("i[name='preview']");
+                    $(test).parent().click();
+                }
             });
         });
     </script>

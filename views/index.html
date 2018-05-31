@@ -75,6 +75,9 @@
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
         }
+        .articleEditForm{
+            display: inline-block;
+        }
 
         .article_detail {
             padding-right: 15px;
@@ -83,7 +86,6 @@
             float: right;
             width: 200px;
             height: 20px;
-            margin-top: -10px;
             display: none;
         }
         .list-group-item{
@@ -137,14 +139,14 @@
                 
                 <div class="articleFoot">
                     <span class="article_right">
-                        <a class="article_detail">{{.time}}</a>
+                        <a class="article_detail createTime">{{.time}}</a>
                         <a class="article_detail">阅读数：{{.viewed}}</a>
-                        <a class="article_detail">评论数：{{.commented}}</a>
-                        <a class="article_detail" href="#">赞</a>
                     </span>
                 </div>
                 <div class="article_bottom" id="index{{$index}}">
-                    <button class="btn btn-primary btn-sm" onclick="javascript:edit(this,{{._id}})">编辑</button>
+                    <form action="/article/reEdit/{{._id}}" method="get" class="articleEditForm">
+                        <button type="submit" class="btn btn-primary btn-sm">编辑</button>
+                    </form>
                     <button class="btn btn-danger btn-sm" onclick="javascript:del(this,{{._id}})">删除</button>
                 </div>
 
@@ -195,22 +197,27 @@
 
     <script type="text/javascript">
         $('a[data-target*="+"]').each(function (index, element) {
-            var oldId = $(this).attr("data-target");
-            var newID = oldId.replace(/\+/g, "temp")
+            let oldId = $(this).attr("data-target");
+            let newID = oldId.replace(/\+/g, "temp");
             $(this).attr('data-target', newID);
         });
 
+        $('.createTime').each(function (index, element) {
+            let dataString = $(element).text();
+            $(element).text(dataString.split(".")[0])
+        });
+
         $('div[id*="+"]').each(function (index, element) {
-            var oldId = $(this).attr("id");
-            var newID = oldId.replace(/\+/g, "temp")
+            let oldId = $(this).attr("id");
+            let newID = oldId.replace(/\+/g, "temp");
             $(this).attr('id', newID);
         });
 
 
 
         $(".articleContent").each(function (index, element) {
-            var content = $(this);
-            var text = element.innerHTML;
+            let content = $(this);
+            let text = element.innerHTML;
             if (text.length > 200) {
                 text = text.substring(0, 200) + "...";
             }
@@ -218,27 +225,20 @@
         });
 
         function show(obj,id) {
-            var objDiv = $("#"+id+"");
+            let objDiv = $("#"+id+"");
             $(objDiv).css("display","block");
         }
         function hide(obj,id) {
-            var objDiv = $("#"+id+"");
+            let objDiv = $("#"+id+"");
             $(objDiv).css("display", "none");
-        }
-
-        //编辑按钮回调
-        function edit(obj,id) {
-            alert(id);
         }
 
         //删除按钮回调
         function del(obj,id) {
-            if(confirm("确定删除吗")){
-                $.get("/article/delete/"+id,function(data){
-                   if(data == "ok"){
-                       var targetArticle = $(obj).parentNode.parentNode
-                       $(targetArticle).remove()
-                   }
+            if(confirm("确定删除?")){
+                $.get("/article/delete/"+id).success(function(data){
+                    let targetArticle = $(obj).parent().parent();
+                    $(targetArticle).remove()
                 });
             }
         }

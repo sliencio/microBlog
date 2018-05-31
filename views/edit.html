@@ -23,10 +23,10 @@
 
         /*发布按钮*/
 
-        #public {
-            background: #4682B4;
-            width: 150px;
-            height: 65px;
+        #publish {
+            background: #01a252;
+            width: 120px;
+            height: 50px;
             margin-left: 30px;
             margin-top: 40px;
             font-size: 20px;
@@ -56,35 +56,37 @@
 
         #choseType {
             float: left;
-            width: 60%;
+            width: 50%;
             line-height: 50px;
             height: 100%;
             overflow: auto;
         }
 
-        #publicDiv {
+        #publishDiv {
             float: left;
             width: 40%;
-            height: 100%;
+            height: 80%;
             line-height: 100px;
         }
 
         .typeCheckBoxDiv {
-            width: 200px;
+            width: 160px;
             float: left;
-            padding-left: 10px;
+            margin-left: 20px;
         }
 
         .typeCheckBox {
-            width: 50px;
+            float: left;
+            width: 40px;
             height: 40px;
         }
 
         .typeName {
-            margin-left: 10px;
+            display: inline-block;
+            height: 40px;
             font-size: 20px;
-            line-height: 40px;
-            padding-top: 0px;
+            line-height: 50px;
+            float: left;
         }
     </style>
 </head>
@@ -123,8 +125,8 @@
             <div id="bottom" class="container">
                 <div id="choseType">
                 </div>
-                <div id="publicDiv">
-                    <button id="public" type="button" class="btn btn-success">public</button>
+                <div id="publishDiv">
+                    <button id="publish" type="button" class="btn btn-success">发 布</button>
                 </div>
             </div>
 
@@ -138,13 +140,13 @@
     <script src="/editor/js/editormd.min.js"></script>
     <script type="text/javascript">
         //初始化分类列表
-        var typeList = $('#typeList').val().split(",");
-        var idIndex = 0;
-        var finalType;
+        let typeList = $('#typeList').val().split(",");
+        let idIndex = 0;
+        let finalType;
         if (typeList.length > 0) {
-            for (var i = 0; i < typeList.length; i++) {
-                console.log(i)
-                var title = typeList[i];
+            for (let i = 0; i < typeList.length; i++) {
+                console.log(i);
+                let title = typeList[i];
                 if (title.length > 0) {
                     //另起一列
                     if (i % 3 == 0) {
@@ -152,7 +154,7 @@
                         createDiv();
                     }
                     //添加每一个分类 每5个放在一行
-                    var innerLi =
+                    let innerLi =
                         "<div class=\"typeCheckBoxDiv\"><input type=\"radio\" class=\"typeCheckBox\" name=\"aaa\"><span class=\"typeName\">" +
                         typeList[i] + "</span></div>";
                     $('#dl' + idIndex).append(innerLi);
@@ -162,8 +164,8 @@
 
 
         function createDiv() {
-            var currentId = "dl" + idIndex;
-            var currentDiv = "<dl id=" + currentId + "></dl>"
+            let currentId = "dl" + idIndex;
+            let currentDiv = "<dl id=" + currentId + "></dl>"
             $('#choseType').append(currentDiv)
         }
 
@@ -172,7 +174,7 @@
         });
 
 
-        var testEditor;
+        let testEditor;
         $(function () {
             testEditor = editormd("test-editormd", {
                 width: "90%",
@@ -183,10 +185,10 @@
                 path: '/editor/lib/'
             });
 
-            $('#public').on('click', function (event) {
+            $('#publish').on('click', function (event) {
                 finalType = $("#newTypeInput").val()
 
-                var blogTitle = $('#blogTitle').val();
+                let blogTitle = $('#blogTitle').val();
                 if (blogTitle.length == 0) {
                     alert("请输入文章标题");
                     return;
@@ -197,7 +199,7 @@
                     return;
                 }
 
-                var articleContent = testEditor.getMarkdown();
+                let articleContent = testEditor.getMarkdown();
                 $.post("/article/publish", {
                     "content": articleContent,
                     "title": blogTitle,

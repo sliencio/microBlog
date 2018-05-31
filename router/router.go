@@ -20,6 +20,7 @@ func init(){
 		article.GET("/",controllers.Home)
 		article.GET("/edit",controllers.Edit)
 		article.POST("/publish",controllers.Publish)
+		article.POST("/rePublish",controllers.RePublish)
 		article.GET("/show/:articleId",controllers.Show)
 		article.GET("/delete/:articleId",controllers.Delete)
 		article.GET("/reEdit/:articleId",controllers.ReEdit)

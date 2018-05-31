@@ -51,24 +51,30 @@ func Example(c *gin.Context) {
 
 //删除
 func Delete(c *gin.Context) {
-	if !CheckLogin(c) {
-		return
-	}
 	objIDStr := c.Param("articleId")
 	objID := bson.ObjectIdHex(objIDStr)
 	typeList := DB.Query("articles", bson.M{"_id": objID})
 	if len(typeList) > 0 {
 		//更新阅读人数
-		err:=DB.Remove("articles", bson.M{"_id": objID})
-		if err==nil{
-			c.String(302,"ok")
-		}
+		DB.Remove("articles", bson.M{"_id": objID})
 	}
 }
 
 //编辑
 func ReEdit(c *gin.Context) {
-	c.HTML(http.StatusOK, "exampleTemplate.html", nil)
+	//查询文章内容
+	objIDStr := c.Param("articleId")
+	objID := bson.ObjectIdHex(strings.Split(objIDStr, "\"")[1])
+	articleList := DB.Query("articles", bson.M{"_id": objID})
+
+	typeList := DB.Query("category", bson.M{"uid": bson.ObjectIdHex(GetUid(c))})
+	if len(typeList) > 0 && len(articleList)>0 {
+		categoryStr := typeList[0]["classify"].(string)
+		c.HTML(http.StatusOK, "reEdit.html", gin.H{
+			"article":articleList[0],
+			"typeList":categoryStr,
+		})
+	}
 }
 
 //发布
@@ -76,11 +82,61 @@ func Publish(c *gin.Context) {
 	content := c.PostForm("content")
 	title := c.PostForm("title")
 	classify := c.PostForm("classify")
-	fmt.Println("-----uid----:", GetUid(c))
 
 	userObjID := bson.ObjectIdHex(GetUid(c))
+	//检查该类型是否为新类型。如果是新类型，就加上，如果不是，就不管
+	checkClassifyIsNew(userObjID,classify)
 
-	typeList := DB.Query("category", bson.M{"uid": userObjID})
+	article := &model.Article{
+		Id:       bson.NewObjectId(),
+		Uid:      userObjID,
+		Title:    title,
+		Time:     time.Now(),
+		Classify: classify,
+		Content:  content,
+	}
+	err := DB.Insert("articles", article)
+	fmt.Println("err:", err)
+	if err == nil {
+		c.JSON(http.StatusOK, gin.H{
+			"ret": true,
+		})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"ret": false,
+		})
+	}
+}
+
+//发布
+func RePublish(c *gin.Context) {
+	content := c.PostForm("content")
+	title := c.PostForm("title")
+	classify := c.PostForm("classify")
+	articleIdStr := c.PostForm("articleId")
+	userObjID := bson.ObjectIdHex(GetUid(c))
+
+	articleId := bson.ObjectIdHex(articleIdStr)
+
+	//检查该类型是否为新类型。如果是新类型，就加上，如果不是，就不管
+	checkClassifyIsNew(userObjID,classify)
+
+	//进行更新操作
+	err := DB.Update("articles", bson.M{"_id":articleId},bson.M{"title":title,"time":time.Now(),"classify":classify,"content":content})
+	fmt.Println("err:", err)
+	if err == nil {
+		c.JSON(http.StatusOK, gin.H{
+			"ret": true,
+		})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"ret": false,
+		})
+	}
+}
+
+func checkClassifyIsNew(uid bson.ObjectId,classify string){
+	typeList := DB.Query("category", bson.M{"uid": uid})
 	var categoryList []string
 	var categoryStr string
 	//用户已经有分类
@@ -102,31 +158,11 @@ func Publish(c *gin.Context) {
 			} else {
 				retInsertStr = classify
 			}
-			DB.Update("category", bson.M{"uid": userObjID}, bson.M{"classify": retInsertStr})
+			DB.Update("category", bson.M{"uid": uid}, bson.M{"classify": retInsertStr})
 		}
 
 	} else {
 		//用户尚未设置分类
-		DB.Insert("category", bson.M{"uid": userObjID, "classify": classify})
-	}
-
-	article := &model.Article{
-		Id:       bson.NewObjectId(),
-		Uid:      userObjID,
-		Title:    title,
-		Time:     time.Now(),
-		Classify: classify,
-		Content:  content,
-	}
-	err := DB.Insert("articles", article)
-	fmt.Println("err:", err)
-	if err == nil {
-		c.JSON(http.StatusOK, gin.H{
-			"ret": true,
-		})
-	} else {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"ret": false,
-		})
+		DB.Insert("category", bson.M{"uid": uid, "classify": classify})
 	}
 }
