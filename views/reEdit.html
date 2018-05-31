@@ -2,7 +2,7 @@
 <html lang="zh">
 
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>editor</title>
     <!-- bootstrap -->
     <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -10,134 +10,140 @@
     <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!-- editor.md -->
-    <link rel="stylesheet" href="/editor/css/style.css" />
-    <link rel="stylesheet" href="/editor/css/editormd.css" />
+    <link rel="stylesheet" href="/editor/css/style.css"/>
+    <link rel="stylesheet" href="/editor/css/editormd.css"/>
 
     <style type="text/css" media="screen">
-        .container {
-            width: 92%;
-            margin-top: 10px;
-            margin-bottom: 20px;
-            /*background: #d377d4;*/
-        }
+    .container {
+        width: 92%;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        /*background: #d377d4;*/
+    }
 
-        /*发布按钮*/
+    /*发布按钮*/
 
-        #publish {
-            background: #01a252;
-            width: 120px;
-            height: 50px;
-            margin-left: 30px;
-            margin-top: 40px;
-            font-size: 20px;
-        }
+    #publish {
+        background: #01a252;
+        width: 120px;
+        height: 50px;
+        margin-left: 30px;
+        margin-top: 40px;
+        font-size: 20px;
+    }
 
-        /*选择分类*/
+    /*选择分类*/
 
-        #newTypeInput {
-            float: left;
-            width: 30%;
-            margin-left: 20px;
-        }
+    #newTypeInput {
+        float: left;
+        width: 30%;
+        margin-left: 20px;
+    }
 
-        #choseTypeTitle {
-            float: left;
-            margin-top: 5px;
-            margin-left: 50px;
-            display: block;
-            color: #00BFFF;
-        }
+    #choseTypeTitle {
+        float: left;
+        margin-top: 5px;
+        margin-left: 50px;
+        display: block;
+        color: #00BFFF;
+    }
 
-        #bottom {
-            width: 92%;
-            height: 200px;
-            padding-bottom: 50px;
-        }
+    #bottom {
+        width: 92%;
+        height: 200px;
+        padding-bottom: 50px;
+    }
 
-        #choseType {
-            float: left;
-            width: 50%;
-            line-height: 50px;
-            height: 100%;
-            overflow: auto;
-        }
+    #choseType {
+        float: left;
+        width: 50%;
+        line-height: 50px;
+        height: 100%;
+        overflow: auto;
+    }
 
-        #publishDiv {
-            float: left;
-            width: 40%;
-            height: 80%;
-            line-height: 100px;
-        }
+    #publishDiv {
+        float: left;
+        width: 40%;
+        height: 80%;
+        line-height: 100px;
+    }
 
-        .typeCheckBoxDiv {
-            width: 160px;
-            float: left;
-            margin-left: 20px;
-        }
+    .typeCheckBoxDiv {
+        width: 160px;
+        float: left;
+        margin-left: 20px;
+    }
 
-        .typeCheckBox {
-            float: left;
-            width: 40px;
-            height: 40px;
-        }
+    .typeCheckBox {
+        float: left;
+        width: 40px;
+        height: 40px;
+    }
 
-        .typeName {
-            display: inline-block;
-            height: 40px;
-            font-size: 20px;
-            line-height: 50px;
-            float: left;
-        }
-    </style>
+    .typeName {
+        display: inline-block;
+        height: 40px;
+        font-size: 20px;
+        line-height: 50px;
+        float: left;
+    }
+</style>
 </head>
 
 <body>
-<nav class="navbar navbar-default" role="navigation">
-    <div class="container-fluid">
-        <!-- {{/*标题*/}} -->
+    <div class="navbar navbar-default navbar-fixed-top">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">修改博客</a>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">修改博客</a>
         </div>
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a href="/home">
-                    <span class="glyphicon glyphicon-home"></span> 返回首页</a>
-            </li>
-        </ul>
+        <div class="navbar-collapse collapse">
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/home"><span class="glyphicon glyphicon-home"></span> 返回首页</a>
+                </li>
+            </ul>
+        </div>
     </div>
-</nav>
 
-<div class="container-fluid">
-    <form>
-        <div class="container">
-            <input type="text" name="title" class="form-control" id="blogTitle" placeholder="请输入文章标题" value="{{.article.title}}">
-        </div>
-
-        <div id="test-editormd"></div>
-
-        <div class="container">
-            <input id="typeList" type="hidden" value="{{.typeList}}" />
-            <input id="newTypeInput" type="text" name="newType" class="form-control" placeholder="输入新分类" />
-            <h3 id="choseTypeTitle">增加新分类</h3>
-        </div>
-
-
-        <div id="bottom" class="container">
-            <div id="choseType">
+    <div class="container-fluid">
+        <form>
+            <div class="container">
+                <input type="text" name="title" class="form-control" id="blogTitle" placeholder="请输入文章标题"
+                value="{{.article.title}}">
             </div>
-            <div id="publishDiv">
-                <button id="publish" type="button" class="btn btn-success">重新发布</button>
+
+            <div id="test-editormd"></div>
+
+            <div class="container">
+                <input id="typeList" type="hidden" value="{{.typeList}}"/>
+                <input id="newTypeInput" type="text" name="newType" class="form-control" placeholder="输入新分类"/>
+                <h3 id="choseTypeTitle">增加新分类</h3>
             </div>
-        </div>
-
-    </form>
-</div>
 
 
-<script src="/editor/js/jquery.min.js"></script>
-<script src="/editor/js/editormd.min.js"></script>
-<script type="text/javascript">
-    var article = {{.article}};
+            <div id="bottom" class="container">
+                <div id="choseType">
+                </div>
+                <div id="publishDiv">
+                    <button id="publish" type="button" class="btn btn-success">重新发布</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+
+    <script src="/editor/js/jquery.min.js"></script>
+    <script src="/editor/js/editormd.min.js"></script>
+    <script type="text/javascript">
+        var article = {{.article}};
     //初始化分类列表
     var typeList = $('#typeList').val().split(",");
     var idIndex = 0;
@@ -154,8 +160,8 @@
                 }
                 //添加每一个分类 每5个放在一行
                 var innerLi =
-                        "<div class=\"typeCheckBoxDiv\"><input type=\"radio\" class=\"typeCheckBox\" name=\"aaa\"><span class=\"typeName\">" +
-                        typeList[i] + "</span></div>";
+                "<div class=\"typeCheckBoxDiv\"><input type=\"radio\" class=\"typeCheckBox\" name=\"aaa\"><span class=\"typeName\">" +
+                typeList[i] + "</span></div>";
                 $('#dl' + idIndex).append(innerLi);
             }
         }
@@ -204,7 +210,7 @@
                 "content": articleContent,
                 "title": blogTitle,
                 "classify": finalType,
-                "articleId":article["_id"]
+                "articleId": article["_id"]
             }, function (data) {
                 if (data["ret"]) {
                     if (confirm("更新成功")) {

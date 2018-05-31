@@ -96,37 +96,36 @@
 
 <body>
     <div class="container">
-        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-            <div class="container-fluid">
-                <!-- {{/*标题*/}} -->
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="/">我的博客</a>
-                </div>
-                <!-- {{/*中间*/}} -->
-                <div>
-                    <ul class="nav navbar-nav">
-                        <li class="active">
-                            <a href="/">首页</a>
-                        </li>
-                        <li>
-                            <a href="/article/edit">写博客</a>
-                        </li>
-                    </ul>
-                </div>
-                <!-- {{/*右侧*/}} -->
+        <div class="navbar navbar-default navbar-fixed-top">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">我的博客</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/">首页</a></li>
+                </ul>
+                <ul class="nav navbar-nav">
+                    <li><a href="/article/edit">写博客</a></li>
+                </ul>
+
                 <ul class="nav navbar-nav navbar-right">
                     <li>
                         <a href="/article/example">
                             <span class="glyphicon glyphicon-question-sign"></span>帮助</a>
-                     </li>
+                    </li>
                     <li>
                         <a href="#">
                             <span class="glyphicon glyphicon-user"></span> {{.UserName}}</a>
                     </li>
                 </ul>
             </div>
-        </nav>
-
+        </div>
 
         <!-- 文章列表 -->
         <div class="container-fluid" id="articleList">
