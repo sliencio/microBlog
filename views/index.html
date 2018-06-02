@@ -10,13 +10,15 @@
     <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <style type="text/css" media="screen">
+
+
         #articleList {
             position: absolute;
             top: 80px;
             bottom: 100px;
             left: 20px;
             right: 300px;
-            /*background-color: #9d9d9d;*/
+            width: 75%;
             overflow: auto;
             overflow-x: hidden;
         }
@@ -27,7 +29,8 @@
             top: 80px;
             bottom: 100px;
             right: 5px;
-            width: 300px;
+            width: 20%;
+            min-width:150px;
             background-color: #cccccc;
             overflow: auto;
             overflow-x: hidden;
@@ -38,6 +41,8 @@
             background: #d9d9d9;
             margin-top: 6px;
         }
+
+
 
         .article_title {
             padding-left: 30px;
@@ -84,12 +89,92 @@
         }
         .article_bottom{
             float: right;
-            width: 200px;
+            width: 100px;
             height: 20px;
             display: none;
+            margin-right: 20px;
         }
         .list-group-item{
             padding-left: 30px;
+        }
+        .navbar-right{
+            margin-right: 15px;
+        }
+
+        @media screen and (max-width: 768px) {
+            #articleList {
+                position: absolute;
+                top: 60px;
+                bottom: 100px;
+                left: 5px;
+                right: 5px;
+                width: 100%;
+                overflow: auto;
+                overflow-x: hidden;
+            }
+            .article {
+                height: 65px;
+                background: #d9d9d9;
+                margin-top: 6px;
+            }
+            .article_title {
+                left: 10px;
+                padding-left: 10px;
+                font-size: 15px;
+                font-weight: bold;
+                color: rgb(19, 17, 17);
+                white-space:nowrap;
+            }
+            /*阅读数*/
+            .articleFoot span {
+                display: inline-block;
+                float: left;
+                margin-left: 10px;
+                white-space:nowrap;
+                margin-top: -5px;
+            }
+
+            /*阅读数*/
+            .articleFoot a {
+                font-size: 10px;
+            }
+
+            .articleBody {
+                margin-top: 5px;
+                color: #808080;
+                font-size: 12px;
+                padding: 0px 15px;
+            }
+            .articleContent{
+                text-align: left;
+                color:#0a001f;
+                height:15px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
+            }
+
+            .article_detail {
+                padding-right: 15px;
+            }
+            .article_bottom{
+                width: 50px;
+                height: 10px;
+                display: none;
+                margin-top: -45px;
+                margin-right: 0px;
+
+            }
+            .article_detail {
+                padding-right: 15px;
+                font-size: 8px;
+            }
+            .articleEditForm{
+                display: block;
+            }
         }
     </style>
 </head>
@@ -128,7 +213,7 @@
         </div>
 
         <!-- 文章列表 -->
-        <div class="container-fluid" id="articleList">
+        <div class="container-fluid col-xs-12" id="articleList">
             {{range $index,$value := .articleList}}
             <div class="article" onMouseOver="javascript:show(this,'index{{$index}}');" onMouseOut="hide(this,'index{{$index}}')">
                 <a class="article_title" href="/article/show/{{._id}}">{{.title}}</a>
@@ -154,7 +239,7 @@
         </div>
 
         <!-- 分类列表 -->
-        <div class="container-fluid" id="classify">
+        <div class="container-fluid hidden-xs" id="classify">
             <div class="panel-group" id="accordion">
                 <div class="panel panel-default">
                     <div class="panel-heading">

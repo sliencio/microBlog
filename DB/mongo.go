@@ -5,6 +5,7 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"microBlog/config"
+	"time"
 )
 
 var operator Operater
@@ -25,15 +26,25 @@ func init() {
 }
 
 //连接数据库
-func (operater *Operater) connect() error {
-	mogsession, err := mgo.Dial(config.MongoUrl)
-	if err != nil {
-		fmt.Println(err)
-		return err
+func (operater *Operater) connect() {
+	dialInfo := &mgo.DialInfo{
+		Addrs:     []string{"127.0.0.1"},
+		Direct:    false,
+		Timeout:   time.Second * 1,
+		Database:  config.MongoDbName,
+		Source:    "admin",
+		Username:  config.MongoUsername,
+		Password:  config.MongoPassword,
+		PoolLimit: 4096, // Session.SetPoolLimit
+	}
+
+	mogsession, err :=mgo.DialWithInfo(dialInfo)
+	if nil != err {
+		panic(err)
 	}
 	operater.mogSession = mogsession
 	operater.database = mogsession.DB(config.MongoDbName)
-	return nil
+
 }
 
 //插入
