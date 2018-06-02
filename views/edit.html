@@ -15,7 +15,7 @@
 
     <style type="text/css" media="screen">
         .container {
-            width: 93%;
+            width: 100%;
             margin-top: 80px;
             margin-bottom: 20px;
             /*background: #d377d4;*/
@@ -39,8 +39,8 @@
 
         #newTypeInput {
             float: left;
-            width: 30%;
-            margin-left: 20px;
+            width: 50%;
+            margin-left: 10px;
         }
 
         #choseTypeTitle {
@@ -52,7 +52,7 @@
         }
 
         #bottom {
-            width: 92%;
+            width: 99%;
             height: 200px;
             padding-bottom: 50px;
         }
@@ -63,6 +63,7 @@
             line-height: 50px;
             height: 100%;
             overflow: auto;
+            background: #ffecec;
         }
 
         #publishDiv {
@@ -178,7 +179,7 @@
 
             <div id="test-editormd"></div>
 
-            <div class="container">
+            <div class="">
                 <input id="typeList" type="hidden" value="{{.typeList}}" />
                 <input id="newTypeInput" type="text" name="newType" class="form-control" placeholder="输入新分类" />
                 <h3 id="choseTypeTitle">增加新分类</h3>
@@ -194,7 +195,6 @@
             </div>
 
         </form>
-
 
     </div>
 
@@ -241,8 +241,8 @@
         let testEditor;
         $(function () {
             testEditor = editormd("test-editormd", {
-                width: "90%",
-                height: 640,
+                width: "99%",
+                height:800,
                 theme: (localStorage.theme) ? localStorage.theme : "default",
                 previewTheme: (localStorage.previewTheme) ? localStorage.previewTheme : "default",
                 editorTheme: (localStorage.editorTheme) ? localStorage.editorTheme : "default",
